@@ -15,7 +15,7 @@ public class App extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("GuessingGame.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 800,500);
-        stage.setTitle("CSC311 HW2 Amaurys");
+        stage.setTitle("GuessingGame");
         stage.setScene(scene);
         stage.show();
     }

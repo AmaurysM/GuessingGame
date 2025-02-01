@@ -2,26 +2,22 @@ package com.csc311hw.csc311hw2.controllers;
 
 import com.csc311hw.csc311hw2.DBController;
 import com.csc311hw.csc311hw2.model.Guess;
-import io.github.palexdev.materialfx.controls.cell.MFXListCell;
+import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.theming.JavaFXThemes;
 import io.github.palexdev.materialfx.theming.MaterialFXStylesheets;
 import io.github.palexdev.materialfx.theming.UserAgentBuilder;
-import javafx.animation.*;
+import javafx.animation.FadeTransition;
+import javafx.animation.FillTransition;
+import javafx.animation.ParallelTransition;
+import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
 import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
-import javafx.util.Callback;
 import javafx.util.Duration;
-import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.materialfx.controls.MFXListView;
-import org.w3c.dom.ls.LSOutput;
 
-import javax.crypto.spec.PSource;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -36,8 +32,8 @@ import java.util.Random;
 public class AppController {
 
     private Connection conn = null;
-    private String dbFilePath = ".//Guesses.accdb";
-    private String databaseURL = "jdbc:ucanaccess://" + dbFilePath;
+    private final String dbFilePath = ".//Guesses.accdb";
+    private final String databaseURL = "jdbc:ucanaccess://" + dbFilePath;
     private LinkedList<Guess> guesses = null;
 
     private ToggleGroup toggleGroup;
@@ -47,9 +43,6 @@ public class AppController {
 
     @FXML
     private Rectangle rectangle;
-
-    @FXML
-    private VBox shapeVBox;
 
     @FXML
     private RadioButton circleRadioButton;
@@ -177,9 +170,7 @@ public class AppController {
         ParallelTransition parallelTransition = new ParallelTransition( fillTransition, translateTransition,fadeTransition);
         parallelTransition.setCycleCount(2);
         parallelTransition.setAutoReverse(true);
-        parallelTransition.setOnFinished((e)->{
-            guessButton.setDisable(false);
-        });
+        parallelTransition.setOnFinished((e)-> guessButton.setDisable(false));
         parallelTransition.play();
     }
 
@@ -201,59 +192,25 @@ public class AppController {
      * that makes wrong guesses red and correct guesses green.
      *
      */
-    /*public void newCellFactory(){
-        listViewFromDB.setCellFactory(lv -> new MFXListCell<Guess>(listViewFromDB,lv) {
-            @Override
-            public void updateItem(Guess item) {
-                super.updateItem(item);
-
-                if (item.isRightGuess()) {
-                    setStyle("-fx-background-color: #549159");
-                } else {
-                    setStyle("-fx-background-color: #e14e11");
-
-                }
-
-            }
-        });
-    }*/
     public void newCellFactory(){
-        listViewFromDB.setCellFactory(lv -> new ListCell<Guess>() {
+        listViewFromDB.setCellFactory(lv -> new ListCell<>() {
             @Override
-            public void updateItem(Guess item,boolean empty) {
-                super.updateItem(item,empty);
-                if(empty){
+            public void updateItem(Guess item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
                     setText(null);
                     setStyle("-fx-background-color: transparent");
-                }else {
-                    /*if (item.isRightGuess()) {
-                        setStyle("""
-                                    -fx-padding: 5px ;
-                                    -fx-background-color: transparent, #549159 ;
-                                    -fx-background-insets: 0px, 2px ;
-                                    """);
-                    } else {
-                        setStyle("""
-                                    -fx-padding: 5px ;
-                                    -fx-background-color: transparent, #e14e11 ;
-                                    -fx-background-insets: 0px, 2px ;
-                                    -fx-background-radius: 5;
-                                    """);
-                        *//*"-fx-padding: 5px ;" +
-                                "-fx-background-color: transparent, #e14e11" +
-                                "-fx-background-insets: 0px, 2px ;");*//*
-                    }*/
+                } else {
                     setStyle("-fx-padding: 5px ;" +
                             "-fx-background-insets: 0px, 2px ;" +
                             "-fx-background-radius: 5;" +
                             "-fx-background-color: transparent, " +
-                            (item.isRightGuess() ? "#549159":"#e14e11") + ";"
+                            (item.isRightGuess() ? "#549159" : "#e14e11") + ";"
                     );
                     setText(item.toString());
                 }
             }
         });
-        //listViewFromDB.setStyle("-fx-background-color: transparent");
     }
 
     /**
